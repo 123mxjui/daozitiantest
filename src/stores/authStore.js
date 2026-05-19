@@ -56,6 +56,12 @@ export const useAuthStore = defineStore('auth', () => {
     return _encryptionKey
   }
 
+  function reset() {
+    _encryptionKey = null
+    isUnlocked.value = false
+    isInitialized.value = false
+  }
+
   return {
     isInitialized,
     isUnlocked,
@@ -64,6 +70,7 @@ export const useAuthStore = defineStore('auth', () => {
     unlock,
     lock,
     getEncryptionKey,
+    reset,
   }
 })
 

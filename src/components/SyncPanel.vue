@@ -49,6 +49,16 @@
 
       <p class="sync-hint">数据在传输和存储过程中均经过 AES-256 加密</p>
     </div>
+
+    <!-- Push confirm -->
+    <ConfirmDialog
+      v-if="showPushConfirm"
+      title="确认推送"
+      message="将覆盖云端数据，确定继续？"
+      confirm-text="继续推送"
+      @confirm="showPushConfirm = false; doPush()"
+      @cancel="showPushConfirm = false"
+    />
   </div>
 </template>
 
@@ -57,6 +67,7 @@ import { ref, onMounted } from 'vue'
 import { loadSyncConfig, saveSyncConfig, createGist, updateGist, readGist } from '../composables/useSync'
 import { useDataStore } from '../stores/dataStore'
 import { useToast } from '../composables/useToast'
+import ConfirmDialog from './ConfirmDialog.vue'
 
 const emit = defineEmits(['close'])
 
@@ -68,6 +79,7 @@ const gistId = ref('')
 const error = ref('')
 const syncing = ref(false)
 const action = ref('')
+const showPushConfirm = ref(false)
 
 onMounted(() => {
   const cfg = loadSyncConfig()
@@ -75,7 +87,15 @@ onMounted(() => {
   gistId.value = cfg.gistId || ''
 })
 
-async function handlePush() {
+function handlePush() {
+  if (gistId.value.trim()) {
+    showPushConfirm.value = true
+    return
+  }
+  doPush()
+}
+
+async function doPush() {
   error.value = ''
   syncing.value = true
   action.value = 'push'
@@ -83,7 +103,6 @@ async function handlePush() {
   try {
     const exportData = data.getExportData()
     const content = JSON.stringify(exportData, null, 2)
-    const cfg = loadSyncConfig()
     const currentToken = token.value.trim()
     const currentGistId = gistId.value.trim()
 
