@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Test</title>
+  <style>
+    body { font-family: system-ui, sans-serif; padding: 24px; background: #f2f3f5; }
+    h1 { font-size: 24px; margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>NavVault Demo</h1>
+    <div id="test-content">如果没有被替换说明 Vue 没加载</div>
+  </div>
+  <script type="module">
+    import { createApp, ref } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
+
+    createApp({
+      setup() {
+        const msg = ref('Vue 3 已加载成功 ✅')
+        return { msg }
+      },
+      template: '<div style="background: #fff; padding: 24px; border-radius: 12px;">{{ msg }}</div>'
+    }).mount('#app')
+  </script>
+</body>
+</html>
